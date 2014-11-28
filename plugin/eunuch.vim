@@ -43,12 +43,12 @@ command! -bar -nargs=1 -bang -complete=file Move :
       \ endif |
       \ let s:dst = substitute(simplify(s:dst), '^\.\'.s:separator(), '', '') |
       \ if <bang>1 && filereadable(s:dst) |
-      \   exe 'keepalt saveas '.s:fnameescape(s:dst) |
+      \   exe 'keepalt silent! saveas '.s:fnameescape(s:dst) |
       \ elseif rename(s:src, s:dst) |
       \   echoerr 'Failed to rename "'.s:src.'" to "'.s:dst.'"' |
       \ else |
       \   setlocal modified |
-      \   exe 'keepalt saveas! '.s:fnameescape(s:dst) |
+      \   exe 'keepalt silent! saveas! '.s:fnameescape(s:dst) |
       \   if s:src !=# expand('%:p') |
       \     execute 'bwipe '.s:fnameescape(s:src) |
       \   endif |
