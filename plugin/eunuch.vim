@@ -23,7 +23,7 @@ endfunction
 
 command! -bar -bang Unlink :
       \ let s:file = fnamemodify(bufname(<q-args>),':p') |
-      \ execute 'bdelete<bang>' |
+      \ execute 'Bclose<bang>' |
       \ if !bufloaded(s:file) && delete(s:file) |
       \   echoerr 'Failed to delete "'.s:file.'"' |
       \ endif |
