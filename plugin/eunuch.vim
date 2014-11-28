@@ -89,7 +89,7 @@ function! s:Grep(bang,args,prg) abort
     if &shellpipe ==# '2>&1| tee' || &shellpipe ==# '|& tee'
       let &shellpipe = "| tee"
     endif
-    execute 'grep! '.a:args
+    execute 'grep! '.substitute(a:args, '|', '\\\\|', 'g')
     if empty(a:bang) && !empty(getqflist())
       return 'cfirst'
     else
