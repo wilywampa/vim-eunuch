@@ -177,6 +177,7 @@ endfunction
 augroup shebang_chmod
   autocmd!
   autocmd BufNewFile  * let b:brand_new_file = 1
+  autocmd BufNew * if expand('%') == '' | let b:brand_new_file = 1 | endif
   autocmd BufWritePost * unlet! b:brand_new_file
   autocmd BufWritePre *
         \ if exists('b:brand_new_file') |
