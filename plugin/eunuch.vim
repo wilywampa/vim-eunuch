@@ -54,8 +54,11 @@ command! -bar -nargs=1 -bang -complete=file Move :
       \ elseif rename(s:src, s:dst) |
       \   echoerr 'Failed to rename "'.s:src.'" to "'.s:dst.'"' |
       \ else |
+      \   let s:directory = &directory |
+      \   set directory^=. |
       \   setlocal modified |
       \   exe 'keepalt saveas! '.s:fnameescape(s:dst) |
+      \   let &directory = s:directory |
       \   if s:src !=# expand('%:p') |
       \     execute 'bwipe '.s:fnameescape(s:src) |
       \   endif |
