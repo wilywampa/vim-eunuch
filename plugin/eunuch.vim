@@ -89,6 +89,9 @@ command! -bar -bang -nargs=? -complete=dir Mkdir
 
 command! -bar -bang -complete=file -nargs=+ Find   exe s:Grep(<q-bang>, <q-args>, 'find')
 command! -bar -bang -complete=file -nargs=+ Locate exe s:Grep(<q-bang>, <q-args>, 'locate')
+if has('mac')
+  command! -bar -bang -complete=file -nargs=+ Mdfind exe s:Grep(<q-bang>, <q-args>, 'mdfind')
+endif
 function! s:Grep(bang,args,prg) abort
   let grepprg = &l:grepprg
   let grepformat = &l:grepformat
