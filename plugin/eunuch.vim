@@ -55,7 +55,9 @@ command! -bar -nargs=1 -bang -complete=file Move :
       \   echoerr 'Failed to rename "'.s:src.'" to "'.s:dst.'"' |
       \ else |
       \   let s:directory = &directory |
-      \   set directory^=. |
+      \   if len(filter(split(&directory, ','), 'v:val != "." && v:val !~# "//$"')) |
+      \     set directory^=. |
+      \   endif |
       \   setlocal modified |
       \   exe 'keepalt saveas! '.s:fnameescape(s:dst) |
       \   let &directory = s:directory |
