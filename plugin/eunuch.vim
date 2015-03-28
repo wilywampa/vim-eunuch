@@ -35,6 +35,8 @@ command! -bar -bang Remove
       \ execute 'Bclose<bang>' |
       \ if !bufloaded(s:file) && delete(s:file) |
       \   echoerr 'Failed to delete "'.s:file.'"' |
+      \ elseif filereadable(undofile(s:file)) && delete(undofile(s:file)) |
+      \   echoerr 'Failed to delete "'.undofile(s:file).'"' |
       \ endif |
       \ unlet s:file
 
