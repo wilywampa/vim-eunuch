@@ -100,12 +100,18 @@ command! -bar -bang -nargs=? -complete=dir Mkdir
       \  silent keepalt execute 'file' s:fnameescape(expand('%')) |
       \ endif
 
-command! -bar -bang -complete=file -nargs=+ Find   exe s:Grep(<q-bang>, <q-args>, 'find')
-command! -bar -bang -complete=file -nargs=+ Locate exe s:Grep(<q-bang>, <q-args>, 'locate')
+command! -bar -bang -complete=file -nargs=+ Find    exe s:Grep(<q-bang>, <q-args>, 'find', '')
+command! -bar -bang -complete=file -nargs=+ Locate  exe s:Grep(<q-bang>, <q-args>, 'locate', '')
+command! -bar -bang -complete=file -nargs=+ Cfind   exe s:Grep(<q-bang>, <q-args>, 'find', '')
+command! -bar -bang -complete=file -nargs=+ Clocate exe s:Grep(<q-bang>, <q-args>, 'locate', '')
+command! -bar -bang -complete=file -nargs=+ Lfind   exe s:Grep(<q-bang>, <q-args>, 'find', 'l')
+command! -bar -bang -complete=file -nargs=+ Llocate exe s:Grep(<q-bang>, <q-args>, 'locate', 'l')
 if has('mac')
-  command! -bar -bang -complete=file -nargs=+ Mdfind exe s:Grep(<q-bang>, <q-args>, 'mdfind')
+  command! -bar -bang -complete=file -nargs=+ Mdfind  exe s:Grep(<q-bang>, <q-args>, 'mdfind', '')
+  command! -bar -bang -complete=file -nargs=+ Cmdfind exe s:Grep(<q-bang>, <q-args>, 'mdfind', '')
+  command! -bar -bang -complete=file -nargs=+ Lmdfind exe s:Grep(<q-bang>, <q-args>, 'mdfind', 'l')
 endif
-function! s:Grep(bang,args,prg) abort
+function! s:Grep(bang, args, prg, type) abort
   let grepprg = &l:grepprg
   let grepformat = &l:grepformat
   let shellpipe = &shellpipe
@@ -115,7 +121,7 @@ function! s:Grep(bang,args,prg) abort
     if &shellpipe ==# '2>&1| tee' || &shellpipe ==# '|& tee'
       let &shellpipe = "| tee"
     endif
-    execute 'grep! '.substitute(a:args, '|', '\\\\|', 'g')
+    execute a:type.'grep! '.substitute(a:args, '|', '\\\\|', 'g')
     if empty(a:bang) && !empty(getqflist())
       return 'cfirst'
     else
@@ -139,6 +145,7 @@ function! s:SilentSudoCmd(editor) abort
     return ['silent', cmd . ' -A']
   else
     return [local_nvim ? 'silent' : '', cmd]
+  endif
 endfunction
 
 function! s:SudoSetup(file) abort
@@ -254,7 +261,7 @@ augroup eunuch
   autocmd BufWritePost * unlet! b:brand_new_file
   autocmd BufWritePre *
         \ if exists('b:brand_new_file') |
-        \   if getline(1) =~ '^#!' |
+        \   if getline(1) =~ '^#!/' |
         \     let b:chmod_post = '+x' |
         \   endif |
         \ endif
